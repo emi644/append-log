@@ -40,3 +40,10 @@ that space, copy live records to a new log and replace the file.
 The log file is opened with `O_APPEND`, so writes from multiple `AppendLog`
 instances pointing at the same file will not interleave at the byte level.
 Records larger than 4 GiB are rejected.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
